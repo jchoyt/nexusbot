@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<project name="nexusbot" default="jar" basedir=".">
+    <property name="src" value="./src" />
+    <property name="build" value="./build" />
+    <property name="doc" value="./doc" />
+    <property name="jarfile" value="${ant.project.name}.jar" />
+    <property name="build.compiler" value="modern" />
+    <property name="lib" value="lib"/>
+    <dirname property="antfile.dir" file="${ant.file}"/>
+
+    <path id="jarspath">
+        <fileset dir="${lib}">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+
+    <target name="init">
+        <tstamp />
+        <mkdir dir="${build}" />
+        <mkdir dir="${build}/images" />
+        <echo message="Build file: ${DSTAMP}, ${TSTAMP}" />
+        <echo message="${jarspath}"></echo>
+    </target>
+
+    <target name="compile" depends="init">
+        <javac srcdir="${src}" target="1.5" destdir="${build}" deprecation="on" debug="on" description="Compile the java code from ${src} into ${build}">
+            <include name="**/*.java" />
+            <classpath>
+                <path refid="jarspath" />
+            </classpath>
+        </javac>
+    </target>
+
+    <target name="jar" depends="compile">
+        <jar jarfile="${jarfile}" basedir="${build}" description="rebuild the jarfile">
+            <manifest>
+                <attribute name="Built-By" value="${user.name}"/>
+                <attribute name="Main-Class" value="nexusbot.NexusBot"/>
+                <attribute name="Built-Date" value="${DSTAMP}, ${TSTAMP}"/>
+                <attribute name="Class-Path" value="lib/pircbot.jar lib/postgresql-8.3-603.jdbc3.jar"/>
+            </manifest>
+        </jar>
+     </target>
+
+    <target name="clean" description="Delete the build and javadoc directory trees and the ${jarfile}">
+        <delete dir="${doc}" />
+        <delete dir="${build}" />
+        <delete file="${jarfile}" />
+        <delete dir="${antfile.dir}">
+            <include name="*.tar"/>
+            <include name="*.gz"/>
+        </delete>
+    </target>
+
+    <target name="dist" depends="clean, jar" description="Bundles up everything necessary for a release">
+        <!-- tar up the binary -->
+        <tar tarfile="${ant.project.name}-bin.tar" basedir="${antfile.dir}">
+            <exclude name="**/CVS/**"/>
+            <include name="${jarfile}"/>
+            <include name="lib/**"/>
+            <include name="LICENSE"/>
+            <include name="AUTHORS"/>
+            <include name="README"/>
+        </tar>
+        <gzip zipfile="${ant.project.name}-bin.tar.gz" src="${ant.project.name}-bin.tar"/>
+        <delete file="${ant.project.name}-bin.tar"></delete>
+        <!-- tar up source and binary -->
+        <tar tarfile="${ant.project.name}-src.tar" basedir="${antfile.dir}">
+            <exclude name="**/CVS/**"/>
+            <include name="src/**"/>
+            <include name="lib/**"/>
+            <include name="${jarfile}"/>
+            <include name="LICENSE"/>
+            <include name="AUTHORS"/>
+            <include name="README"/>
+        </tar>
+        <gzip zipfile="${ant.project.name}-src.tar.gz" src="${ant.project.name}-src.tar"/>
+        <delete file="${ant.project.name}-src.tar"></delete>
+
+    </target>
+
+    <target name="doc" depends="init">
+        <mkdir dir="${doc}" />
+        <javadoc packagenames="*" sourcepath="src" destdir="${doc}" author="true" version="true" windowtitle="AG Toolkit" />
+    </target>
+
+</project>
+
+
+
+
