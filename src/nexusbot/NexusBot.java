@@ -79,7 +79,7 @@ public class NexusBot extends PircBot
         doers.add(new YocsCommands());
         doers.add(new MessageCommands());
         doers.add(new RaidCommands());
-        doers.add(new ShCommands(this));
+        //doers.add(new ShCommands(this));
 
         join();
 
@@ -113,7 +113,7 @@ public class NexusBot extends PircBot
         {
             if(doer.handlePrivateMessage( info )) break;
         }
-        onMessage(sender, sender, login, hostname, message);
+        // onMessage(sender, sender, login, hostname, message);
     }
 
     /**

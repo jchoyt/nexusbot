@@ -121,7 +121,7 @@ public class MessageCommands implements BotCommandHandler
             if( newTot > 25 )
             {
                 info.sendMessage( "Your request is denied.  " + who +
-                    " has a full mailbox.  This will reset sometime in the next 24 hours.  Blame the <censored> who abused me and forced Purveyor to put this in just so I can be started back up.");
+                    " has a full mailbox.  This will reset sometime in the next 24 hours.  Blame the <censored> who abused me and forced Entomo to put this in just so I can be started back up.");
                 return true;
             }
             sentMessages.put(who, newTot );
